@@ -1,0 +1,2214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>somnium // 1999 — do you remember the way home?</title>
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' stop-color='%23fff8e6'/%3E%3Cstop offset='100%25' stop-color='%2379b4ff'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='30' fill='url(%23g)'/%3E%3Cpath d='M10 32 Q32 14 54 32 Q32 50 10 32 Z' fill='%23ffffff' stroke='%23546c9e' stroke-width='2.5'/%3E%3Ccircle cx='32' cy='32' r='9' fill='%236c96f0'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%231d2540'/%3E%3Ccircle cx='29' cy='29' r='2' fill='%23ffffff'/%3E%3C/svg%3E"
+  />
+  <style>
+    :root {
+      --sky-top: #378ef2;
+      --sky-mid: #89ccff;
+      --sky-horizon: #fff4d9;
+      --accent-primary: #5b97f2;
+      --accent-secondary: #f4a9cb;
+      --accent-meadow: #59c447;
+      --chrome-face: rgba(242, 246, 255, 0.88);
+      --chrome-face-solid: #eef3fc;
+      --chrome-border-light: #ffffff;
+      --chrome-border-dark: #8c9ebb;
+      --chrome-border-deep: #596b8a;
+      --titlebar-start: #6ca4f2;
+      --titlebar-end: #c8aff7;
+      --ink-main: #24304a;
+      --ink-muted: #556585;
+      --halo-glow: rgba(255, 232, 196, 0.78);
+      --periphery-mist: rgba(255, 248, 238, 0.62);
+      --dream-blur: 0px;
+      --font-serif: "Georgia", "Palatino", "Times New Roman", serif;
+      --font-ui: "Tahoma", "Geneva", "Verdana", sans-serif;
+      --font-mono: "Monaco", "Courier New", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: var(--sky-mid);
+      color: var(--ink-main);
+      font-family: var(--font-ui);
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+
+    /* Layer 0: Living Procedural Dream Sky & Liminal Horizon Canvas */
+    #dream-sky-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      display: block;
+    }
+
+    /* Layer 1: Peripheral Halation, 35mm Grain & Optional VHS Lens */
+    .dream-periphery-halation {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      pointer-events: none;
+      box-shadow:
+        inset 0 0 110px 34px var(--periphery-mist),
+        inset 0 0 240px 65px rgba(203, 224, 255, 0.34);
+      transition: box-shadow 0.9s ease;
+    }
+
+    body.half-asleep .dream-stage-wrap {
+      filter: blur(1.35px) saturate(1.16) brightness(1.04);
+    }
+
+    body.half-asleep .dream-periphery-halation {
+      box-shadow:
+        inset 0 0 145px 62px rgba(255, 247, 238, 0.85),
+        inset 0 0 290px 110px rgba(216, 198, 255, 0.48);
+    }
+
+    #film-grain-overlay {
+      position: fixed;
+      inset: -64px;
+      z-index: 41;
+      pointer-events: none;
+      opacity: 0.14;
+      mix-blend-mode: overlay;
+      background-repeat: repeat;
+      will-change: transform;
+    }
+
+    .vhs-scanlines {
+      position: fixed;
+      inset: 0;
+      z-index: 42;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0) 0px,
+          rgba(255, 255, 255, 0) 2px,
+          rgba(38, 54, 92, 0.055) 3px,
+          rgba(255, 255, 255, 0.04) 4px
+        );
+    }
+
+    body.vhs-active .vhs-scanlines {
+      opacity: 1;
+    }
+
+    /* Top Liminal Camcorder / 1999 Taskbar HUD */
+    .liminal-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 35;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 18px;
+      background: linear-gradient(
+        90deg,
+        rgba(240, 246, 255, 0.86) 0%,
+        rgba(255, 247, 252, 0.82) 50%,
+        rgba(238, 246, 255, 0.86) 100%
+      );
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 2px solid var(--chrome-border-light);
+      box-shadow:
+        0 1px 0 var(--chrome-border-dark),
+        0 10px 28px rgba(72, 108, 172, 0.14);
+    }
+
+    .vhs-status-cluster {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      letter-spacing: 0.06em;
+      color: var(--ink-main);
+    }
+
+    .rec-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      background: rgba(255, 255, 255, 0.78);
+      border-top: 1px solid var(--chrome-border-dark);
+      border-left: 1px solid var(--chrome-border-dark);
+      border-right: 1px solid var(--chrome-border-light);
+      border-bottom: 1px solid var(--chrome-border-light);
+      color: #36558f;
+      font-weight: 700;
+    }
+
+    .rec-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #6ad15b;
+      box-shadow: 0 0 8px #6ad15b;
+      animation: gentlePulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); opacity: 0.95; }
+      50% { transform: scale(1.25); opacity: 0.55; }
+    }
+
+    .topbar-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Classic Y2K Pearl Bevel Button */
+    .bevel-btn {
+      appearance: none;
+      cursor: pointer;
+      font-family: var(--font-ui);
+      font-size: 11.5px;
+      letter-spacing: 0.02em;
+      color: var(--ink-main);
+      background: linear-gradient(180deg, #ffffff 0%, #e4ecfa 100%);
+      padding: 5px 11px;
+      border-top: 2px solid var(--chrome-border-light);
+      border-left: 2px solid var(--chrome-border-light);
+      border-right: 2px solid var(--chrome-border-deep);
+      border-bottom: 2px solid var(--chrome-border-deep);
+      box-shadow: inset -1px -1px 0 var(--chrome-border-dark);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: filter 0.15s ease, transform 0.08s ease;
+    }
+
+    .bevel-btn:hover {
+      filter: brightness(1.04);
+      background: linear-gradient(180deg, #ffffff 0%, #eef3ff 100%);
+    }
+
+    .bevel-btn:active,
+    .bevel-btn[aria-pressed="true"] {
+      border-top: 2px solid var(--chrome-border-deep);
+      border-left: 2px solid var(--chrome-border-deep);
+      border-right: 2px solid var(--chrome-border-light);
+      border-bottom: 2px solid var(--chrome-border-light);
+      background: linear-gradient(180deg, #dce6f8 0%, #eef4ff 100%);
+      transform: translateY(0.5px);
+    }
+
+    .eq-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 11px;
+      width: 14px;
+    }
+
+    .eq-bars span {
+      width: 2.5px;
+      height: 3px;
+      background: #5b87d6;
+      transition: height 0.2s ease;
+    }
+
+    body.audio-playing .eq-bars span:nth-child(1) { animation: eqBounce 0.9s ease-in-out infinite; }
+    body.audio-playing .eq-bars span:nth-child(2) { animation: eqBounce 0.7s ease-in-out 0.15s infinite; }
+    body.audio-playing .eq-bars span:nth-child(3) { animation: eqBounce 1.1s ease-in-out 0.3s infinite; }
+
+    @keyframes eqBounce {
+      0%, 100% { height: 3px; }
+      50% { height: 11px; }
+    }
+
+    /* Main Stage Layout */
+    .dream-stage-wrap {
+      position: relative;
+      z-index: 10;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 14px 22px 44px;
+      transition: filter 0.7s ease;
+    }
+
+    /* Seraphic Winged Eye Hero Header */
+    .seraph-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin: 4px 0 16px;
+      position: relative;
+    }
+
+    .watcher-button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 4px 12px;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 6px 20px rgba(255, 250, 236, 0.92))
+              drop-shadow(0 0 34px rgba(154, 195, 255, 0.65));
+      transition: transform 0.35s ease;
+    }
+
+    .watcher-button:hover {
+      transform: scale(1.04);
+    }
+
+    .watcher-svg {
+      width: 230px;
+      height: 92px;
+      overflow: visible;
+    }
+
+    .wing-left-outer { transform-origin: 115px 46px; animation: wingBreathLeft 5.2s ease-in-out infinite; }
+    .wing-right-outer { transform-origin: 115px 46px; animation: wingBreathRight 5.2s ease-in-out infinite; }
+    .wing-left-inner { transform-origin: 115px 46px; animation: wingBreathLeft 4.1s ease-in-out 0.4s infinite; }
+    .wing-right-inner { transform-origin: 115px 46px; animation: wingBreathRight 4.1s ease-in-out 0.4s infinite; }
+
+    @keyframes wingBreathLeft {
+      0%, 100% { transform: rotate(0deg) translateY(0px); }
+      50% { transform: rotate(4.5deg) translateY(-2.5px); }
+    }
+
+    @keyframes wingBreathRight {
+      0%, 100% { transform: rotate(0deg) translateY(0px); }
+      50% { transform: rotate(-4.5deg) translateY(-2.5px); }
+    }
+
+    #watcher-eyelid {
+      transform-origin: 115px 46px;
+      transform: scaleY(0);
+      transition: transform 0.18s ease-in-out;
+    }
+
+    .watcher-button.blinking #watcher-eyelid,
+    body.half-asleep #watcher-eyelid {
+      transform: scaleY(0.72);
+    }
+
+    .dreamcore-overline {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(18px, 2.3vw, 25px);
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: lowercase;
+      color: #ffffff;
+      text-shadow:
+        0 1px 3px rgba(32, 54, 102, 0.72),
+        0 0 18px rgba(255, 252, 240, 0.95),
+        0 0 36px rgba(173, 206, 255, 0.85);
+      margin-top: 2px;
+    }
+
+    .dreamcore-subwhisper {
+      margin-top: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: rgba(36, 52, 86, 0.82);
+      background: rgba(255, 255, 255, 0.56);
+      padding: 3px 12px;
+      border-radius: 999px;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.8);
+    }
+
+    /* Workspace Grid of Liminal Windows */
+    .liminal-workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.68fr) minmax(305px, 0.92fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .side-column {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Nostalgic 1999 Pearl-Bevel Floating Window */
+    .dream-window {
+      position: relative;
+      background: var(--chrome-face);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 2px solid var(--chrome-border-light);
+      border-left: 2px solid var(--chrome-border-light);
+      border-right: 2px solid var(--chrome-border-deep);
+      border-bottom: 2px solid var(--chrome-border-deep);
+      box-shadow:
+        inset -1px -1px 0 var(--chrome-border-dark),
+        0 18px 46px rgba(48, 79, 138, 0.22),
+        0 0 38px var(--halo-glow);
+      padding: 4px;
+      transition: box-shadow 0.5s ease;
+    }
+
+    .dream-window.is-focused {
+      box-shadow:
+        inset -1px -1px 0 var(--chrome-border-dark),
+        0 22px 56px rgba(42, 70, 130, 0.30),
+        0 0 48px rgba(255, 246, 224, 0.92);
+    }
+
+    .window-titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 5px 8px;
+      background: linear-gradient(90deg, var(--titlebar-start) 0%, var(--titlebar-end) 100%);
+      color: #ffffff;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-shadow: 0 1px 2px rgba(34, 48, 86, 0.45);
+      cursor: grab;
+    }
+
+    .window-titlebar:active {
+      cursor: grabbing;
+    }
+
+    .titlebar-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .titlebar-glyph {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      background: radial-gradient(circle at 35% 35%, #ffffff, #ffe1a8 65%, #d69bf2 100%);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
+    }
+
+    .titlebar-buttons {
+      display: flex;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .win-ctrl-btn {
+      width: 18px;
+      height: 17px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--ink-main);
+      background: var(--chrome-face-solid);
+      border-top: 1.5px solid #ffffff;
+      border-left: 1.5px solid #ffffff;
+      border-right: 1.5px solid var(--chrome-border-deep);
+      border-bottom: 1.5px solid var(--chrome-border-deep);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .win-ctrl-btn:hover {
+      background: #ffffff;
+    }
+
+    .win-ctrl-btn:active {
+      border-top: 1.5px solid var(--chrome-border-deep);
+      border-left: 1.5px solid var(--chrome-border-deep);
+      border-right: 1.5px solid #ffffff;
+      border-bottom: 1.5px solid #ffffff;
+    }
+
+    /* Primary Liminal Viewport Frame */
+    .viewport-sunken-well {
+      margin-top: 4px;
+      position: relative;
+      aspect-ratio: 1376 / 768;
+      width: 100%;
+      overflow: hidden;
+      background: #92c5f7;
+      border-top: 2px solid var(--chrome-border-deep);
+      border-left: 2px solid var(--chrome-border-deep);
+      border-right: 2px solid var(--chrome-border-light);
+      border-bottom: 2px solid var(--chrome-border-light);
+    }
+
+    .scene-plate {
+      position: absolute;
+      inset: -1.5%;
+      width: 103%;
+      height: 103%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1.015);
+      transition: opacity 0.75s ease, filter 0.75s ease;
+      filter: saturate(1.1) contrast(1.02) brightness(1.03);
+      will-change: transform, opacity;
+      pointer-events: none;
+    }
+
+    .scene-plate.is-active {
+      opacity: 1;
+    }
+
+    /* Soft Dream Halation Frame Inside Viewport */
+    .viewport-bloom-rim {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 4;
+      box-shadow:
+        inset 0 0 38px 10px rgba(255, 248, 236, 0.56),
+        inset 0 0 90px 18px rgba(176, 212, 255, 0.25);
+    }
+
+    body.vhs-active .scene-plate.is-active {
+      filter: saturate(1.18) contrast(1.04) brightness(1.04) drop-shadow(2px 0 0 rgba(255, 110, 175, 0.25)) drop-shadow(-2px 0 0 rgba(90, 225, 255, 0.25));
+    }
+
+    /* Camcorder OSD Overlay inside Viewport */
+    .viewport-osd-top {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      right: 14px;
+      z-index: 6;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: rgba(255, 253, 245, 0.94);
+      text-shadow:
+        1px 1px 0 rgba(28, 43, 78, 0.78),
+        0 0 10px rgba(255, 244, 214, 0.85);
+    }
+
+    /* Canonical Dreamcore Spaced Serif Caption inside Scene */
+    .dreamcore-caption-overlay {
+      position: absolute;
+      left: 5%;
+      right: 5%;
+      bottom: 10px;
+      z-index: 7;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .dreamcore-caption-text {
+      display: inline-block;
+      max-width: 92%;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(14.5px, 1.72vw, 20px);
+      line-height: 1.36;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      color: #fffef9;
+      padding: 5px 16px;
+      border-radius: 999px;
+      background: radial-gradient(
+        ellipse at center,
+        rgba(28, 42, 78, 0.36) 0%,
+        rgba(28, 42, 78, 0.14) 72%,
+        rgba(28, 42, 78, 0) 100%
+      );
+      text-shadow:
+        0 1px 2px rgba(18, 25, 48, 0.95),
+        0 -1px 2px rgba(18, 25, 48, 0.75),
+        1px 0 2px rgba(18, 25, 48, 0.8),
+        -1px 0 2px rgba(18, 25, 48, 0.8),
+        0 0 18px rgba(255, 238, 200, 0.95),
+        0 0 32px rgba(196, 175, 255, 0.75);
+      transition: opacity 0.32s ease, transform 0.32s ease;
+    }
+
+    .dreamcore-caption-text.is-updating {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+
+    /* Interactive Spatial Hotspot Portals */
+    #hotspot-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+    }
+
+    .dream-hotspot {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.95);
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.92) 0%,
+        rgba(255, 231, 198, 0.52) 42%,
+        rgba(176, 208, 255, 0.12) 72%,
+        transparent 100%
+      );
+      box-shadow:
+        0 0 16px rgba(255, 250, 232, 0.95),
+        0 0 30px rgba(154, 198, 255, 0.75);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .dream-hotspot::before {
+      content: "";
+      position: absolute;
+      inset: -7px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 253, 244, 0.85);
+      animation: portalSpin 9s linear infinite;
+    }
+
+    .dream-hotspot::after {
+      content: "✦";
+      font-size: 13px;
+      color: #4666a6;
+      text-shadow: 0 0 6px #ffffff;
+    }
+
+    .dream-hotspot:hover,
+    .dream-hotspot.is-selected {
+      transform: translate(-50%, -50%) scale(1.22);
+      box-shadow:
+        0 0 22px #ffffff,
+        0 0 42px rgba(255, 206, 235, 0.98);
+    }
+
+    .dream-hotspot.is-selected::after {
+      color: #c2599b;
+    }
+
+    .hotspot-tag {
+      position: absolute;
+      top: calc(100% + 7px);
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: lowercase;
+      padding: 2px 7px;
+      background: rgba(250, 252, 255, 0.92);
+      color: var(--ink-main);
+      border: 1px solid var(--chrome-border-dark);
+      box-shadow: 0 3px 10px rgba(34, 52, 92, 0.22);
+      pointer-events: none;
+      opacity: 0.94;
+    }
+
+    .dream-hotspot.tag-above .hotspot-tag {
+      top: auto;
+      bottom: calc(100% + 8px);
+    }
+
+    @keyframes portalSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Viewport Footer Status & Recovered Memory Fragment Bar */
+    .viewport-statusbar {
+      margin-top: 5px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 6px 10px;
+      background: rgba(233, 240, 252, 0.88);
+      border-top: 1.5px solid var(--chrome-border-dark);
+      border-left: 1.5px solid var(--chrome-border-dark);
+      border-right: 1.5px solid var(--chrome-border-light);
+      border-bottom: 1.5px solid var(--chrome-border-light);
+      font-size: 11.5px;
+    }
+
+    .memory-fragment-readout {
+      color: var(--ink-main);
+      line-height: 1.35;
+    }
+
+    .memory-fragment-readout strong {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: #4c6eb5;
+      text-transform: uppercase;
+      margin-right: 6px;
+    }
+
+    .coords-readout {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--ink-muted);
+      white-space: nowrap;
+    }
+
+    /* Side Window 1: Strata Selector (memories.idx) */
+    .window-body {
+      padding: 10px;
+    }
+
+    .strata-intro {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 13.5px;
+      color: var(--ink-muted);
+      margin-bottom: 9px;
+      letter-spacing: 0.03em;
+    }
+
+    .strata-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .stratum-card {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+      padding: 6px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.72);
+      border-top: 2px solid var(--chrome-border-light);
+      border-left: 2px solid var(--chrome-border-light);
+      border-right: 2px solid var(--chrome-border-dark);
+      border-bottom: 2px solid var(--chrome-border-dark);
+      transition: background 0.2s ease, transform 0.12s ease;
+    }
+
+    .stratum-card:hover {
+      background: rgba(255, 255, 255, 0.94);
+    }
+
+    .stratum-card.is-active {
+      background: linear-gradient(90deg, rgba(226, 239, 255, 0.96), rgba(247, 234, 255, 0.94));
+      border-top: 2px solid var(--chrome-border-deep);
+      border-left: 2px solid var(--chrome-border-deep);
+      border-right: 2px solid var(--chrome-border-light);
+      border-bottom: 2px solid var(--chrome-border-light);
+    }
+
+    .stratum-thumb {
+      width: 74px;
+      height: 44px;
+      object-fit: cover;
+      border: 1px solid var(--chrome-border-deep);
+      filter: saturate(1.12);
+    }
+
+    .stratum-meta-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-main);
+      display: block;
+    }
+
+    .stratum-meta-sub {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Telemetry Box inside memories.idx */
+    .liminal-telemetry-grid {
+      margin-top: 10px;
+      padding: 8px;
+      background: rgba(232, 239, 252, 0.78);
+      border-top: 1.5px solid var(--chrome-border-dark);
+      border-left: 1.5px solid var(--chrome-border-dark);
+      border-right: 1.5px solid var(--chrome-border-light);
+      border-bottom: 1.5px solid var(--chrome-border-light);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 10px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+
+    .telemetry-cell span {
+      display: block;
+      color: var(--ink-muted);
+      font-size: 9px;
+    }
+
+    .telemetry-cell strong {
+      color: #365084;
+      font-weight: 700;
+    }
+
+    /* Side Window 2: Uncanny Nostalgia Dialog (reminder.msg) */
+    .dialog-prompt-layout {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 4px 2px 10px;
+    }
+
+    .dialog-key-orb {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 32% 30%, #ffffff 0%, #ffe6c7 48%, #b6cbff 100%);
+      border: 1.5px solid #ffffff;
+      box-shadow:
+        0 0 16px rgba(255, 232, 198, 0.95),
+        inset 0 0 10px rgba(145, 175, 242, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+    }
+
+    .dialog-question-text {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 14.5px;
+      line-height: 1.48;
+      color: var(--ink-main);
+      letter-spacing: 0.02em;
+    }
+
+    .dialog-response-echo {
+      margin-top: 6px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: #5b6f99;
+      min-height: 16px;
+    }
+
+    .dialog-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      justify-content: flex-end;
+      padding-top: 8px;
+      border-top: 1px solid rgba(140, 158, 187, 0.38);
+    }
+
+    @keyframes gentleReject {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-3px); }
+    }
+
+    .dream-window.gentle-shake {
+      animation: gentleReject 0.36s ease-in-out;
+    }
+
+    /* Floating Memory Echo Cards Spawned by User Choices */
+    #floating-echo-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 32;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .floating-echo-note {
+      position: absolute;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      color: #ffffff;
+      padding: 6px 14px;
+      background: rgba(168, 196, 248, 0.32);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      border-radius: 999px;
+      text-shadow:
+        0 1px 2px rgba(29, 44, 82, 0.72),
+        0 0 14px rgba(255, 244, 218, 0.95);
+      box-shadow: 0 6px 24px rgba(132, 168, 235, 0.32);
+      animation: floatMemoryUp 5.4s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+
+    @keyframes floatMemoryUp {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 14px) scale(0.92);
+      }
+      16% {
+        opacity: 0.98;
+        transform: translate(-50%, 0px) scale(1);
+      }
+      80% {
+        opacity: 0.86;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -95px) scale(1.04);
+      }
+    }
+
+    /* Bottom Liminal Whisper Ticker */
+    .liminal-footer-note {
+      margin: 20px auto 0;
+      width: fit-content;
+      max-width: 94%;
+      text-align: center;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 13.5px;
+      letter-spacing: 0.09em;
+      text-transform: lowercase;
+      color: #2f4370;
+      background: rgba(255, 255, 255, 0.64);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      padding: 5px 18px;
+      border-radius: 999px;
+      box-shadow: 0 4px 18px rgba(132, 165, 224, 0.22);
+    }
+
+    /* Responsive Layout below 980px */
+    @media (max-width: 980px) {
+      .liminal-workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .liminal-topbar {
+        padding: 8px 12px;
+      }
+
+      .dream-stage-wrap {
+        padding: 12px 12px 36px;
+      }
+    }
+  </style>
+</head>
+<body class="vhs-active">
+  <!-- Layer 0: Procedural Atmospheric Sky, Floating Soap Orbs & Horizon Checkerboard -->
+  <canvas id="dream-sky-canvas" aria-hidden="true"></canvas>
+
+  <!-- Layer 1: Peripheral Dream Halation, 35mm Film Grain & VHS Scanlines -->
+  <div class="dream-periphery-halation" aria-hidden="true"></div>
+  <div id="film-grain-overlay" aria-hidden="true"></div>
+  <div class="vhs-scanlines" aria-hidden="true"></div>
+
+  <!-- Layer 2: Floating User-Spawned Memory Echoes -->
+  <div id="floating-echo-layer" aria-hidden="true"></div>
+
+  <!-- Top Nostalgic Camcorder / 1999 Liminal Taskbar -->
+  <header class="liminal-topbar">
+    <div class="vhs-status-cluster">
+      <span class="rec-pill" title="sunday afternoon loop active">
+        <span class="rec-dot"></span>
+        <span>PLAY ▷ 1999.08.14</span>
+      </span>
+      <span id="stuck-clock" title="time loops gently at 04:15 PM">04:15:08 PM</span>
+    </div>
+
+    <div class="topbar-controls">
+      <button type="button" id="btn-audio-toggle" class="bevel-btn" aria-pressed="false">
+        <span class="eq-bars" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span id="audio-btn-label">tape hum: off</span>
+      </button>
+
+      <button type="button" id="btn-vhs-toggle" class="bevel-btn" aria-pressed="true">
+        <span>📼 vhs halation: on</span>
+      </button>
+
+      <button type="button" id="btn-half-asleep" class="bevel-btn" aria-pressed="false">
+        <span>☾ half-asleep blur</span>
+      </button>
+
+      <button type="button" id="btn-drift-deeper" class="bevel-btn">
+        <span>✦ drift deeper</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="dream-stage-wrap">
+    <!-- Iconic Dreamcore Six-Winged Seraphic Watcher Eye -->
+    <section class="seraph-header" aria-label="Seraphic Dream Watcher">
+      <button
+        type="button"
+        id="seraphic-watcher-btn"
+        class="watcher-button"
+        title="the sky is watching gently — click to blink into lucid soft-focus"
+      >
+        <svg class="watcher-svg" viewBox="0 0 230 92" role="img" aria-label="Six-winged porcelain dreamcore eye">
+          <defs>
+            <radialGradient id="haloGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fffdf4" stop-opacity="0.95" />
+              <stop offset="55%" stop-color="#ffe6c8" stop-opacity="0.45" />
+              <stop offset="100%" stop-color="#b8d4ff" stop-opacity="0" />
+            </radialGradient>
+            <linearGradient id="wingFeather" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff" />
+              <stop offset="68%" stop-color="#edf2ff" />
+              <stop offset="100%" stop-color="#d7c8f7" />
+            </linearGradient>
+            <radialGradient id="irisGrad" cx="42%" cy="38%" r="58%">
+              <stop offset="0%" stop-color="#aee4ff" />
+              <stop offset="48%" stop-color="#6e9ef5" />
+              <stop offset="82%" stop-color="#8b6cd9" />
+              <stop offset="100%" stop-color="#3c4c7a" />
+            </radialGradient>
+          </defs>
+
+          <!-- Radiant Sun-Halo Ring Behind Wings -->
+          <circle cx="115" cy="46" r="43" fill="url(#haloGrad)" />
+          <circle cx="115" cy="46" r="33" fill="none" stroke="#fff8e3" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.85" />
+
+          <!-- Upper & Lower Outer Porcelain Wings -->
+          <g class="wing-left-outer">
+            <path d="M92,43 C66,18 34,12 8,24 C24,33 44,39 68,45 C42,45 20,51 10,63 C35,64 65,58 92,48 Z"
+                  fill="url(#wingFeather)" stroke="#b4c2e4" stroke-width="1" />
+          </g>
+          <g class="wing-right-outer">
+            <path d="M138,43 C164,18 196,12 222,24 C206,33 186,39 162,45 C188,45 210,51 220,63 C195,64 165,58 138,48 Z"
+                  fill="url(#wingFeather)" stroke="#b4c2e4" stroke-width="1" />
+          </g>
+
+          <!-- Inner Seraphim Feathers -->
+          <g class="wing-left-inner">
+            <path d="M96,39 C78,12 52,5 32,12 C46,24 66,34 88,43 Z"
+                  fill="#ffffff" stroke="#c5d0ec" stroke-width="0.9" opacity="0.92" />
+            <path d="M96,53 C78,76 54,83 35,77 C48,66 68,58 88,50 Z"
+                  fill="#f7f2ff" stroke="#c5d0ec" stroke-width="0.9" opacity="0.9" />
+          </g>
+          <g class="wing-right-inner">
+            <path d="M134,39 C152,12 178,5 198,12 C184,24 164,34 142,43 Z"
+                  fill="#ffffff" stroke="#c5d0ec" stroke-width="0.9" opacity="0.92" />
+            <path d="M134,53 C152,76 176,83 195,77 C182,66 162,58 142,50 Z"
+                  fill="#f7f2ff" stroke="#c5d0ec" stroke-width="0.9" opacity="0.9" />
+          </g>
+
+          <!-- Sclera (Almond Porcelain Eye) -->
+          <clipPath id="eyeAlmondClip">
+            <path d="M84,46 Q115,23 146,46 Q115,69 84,46 Z" />
+          </clipPath>
+
+          <path d="M84,46 Q115,23 146,46 Q115,69 84,46 Z"
+                fill="#fffdf9" stroke="#7d8fb8" stroke-width="1.5" />
+
+          <!-- Cursor-Tracking Iris & Starry Pupil -->
+          <g clip-path="url(#eyeAlmondClip)">
+            <g id="watcher-iris-group">
+              <circle cx="115" cy="46" r="13.5" fill="url(#irisGrad)" />
+              <circle cx="115" cy="46" r="10.2" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="0.8" stroke-dasharray="1.5 2" />
+              <circle cx="115" cy="46" r="5.6" fill="#1d2540" />
+              <!-- Specular Dream Glints -->
+              <circle cx="110.5" cy="41.5" r="2.6" fill="#ffffff" opacity="0.95" />
+              <circle cx="119" cy="49.5" r="1.2" fill="#ffe6f7" opacity="0.85" />
+            </g>
+            <!-- Porcelain Blink Eyelid -->
+            <rect id="watcher-eyelid" x="80" y="20" width="70" height="52" fill="#f5eeff" stroke="#9aa9ce" stroke-width="1" />
+          </g>
+
+          <!-- Delicate Outer Eyelash Rim -->
+          <path d="M84,46 Q115,23 146,46 Q115,69 84,46 Z"
+                fill="none" stroke="#6f80ab" stroke-width="1.4" />
+        </svg>
+      </button>
+
+      <h1 id="hero-whisper-title" class="dreamcore-overline">
+        you've been here before, haven't you?
+      </h1>
+      <p class="dreamcore-subwhisper">
+        archive://somnium.1999/liminal_memories — click glowing portals inside the frame to remember
+      </p>
+    </section>
+
+    <!-- Interactive Workspace -->
+    <section class="liminal-workspace" aria-label="Liminal Memory Windows">
+      <!-- Primary Viewport Window -->
+      <article class="dream-window is-focused" id="win-viewer" data-draggable-window>
+        <div class="window-titlebar" data-drag-handle>
+          <div class="titlebar-label">
+            <span class="titlebar-glyph" aria-hidden="true"></span>
+            <span id="viewer-window-title">liminal_viewer.exe — [01_endless_sunday.bmp]</span>
+          </div>
+          <div class="titlebar-buttons">
+            <button type="button" class="win-ctrl-btn" data-win-action="whisper" title="ask this memory a question">?</button>
+            <button type="button" class="win-ctrl-btn" data-win-action="reset-pos" title="re-center window">❖</button>
+          </div>
+        </div>
+
+        <div class="viewport-sunken-well" id="dream-viewport">
+          <img
+            id="plate-sunday_meadow"
+            class="scene-plate is-active"
+            src="./assets/meadow_portal.jpg"
+            alt="Endless emerald hills under a bright blue sky with a freestanding glowing peach doorway, lonely marble arches, and a checkerboard path in wildflowers"
+          />
+          <img
+            id="plate-warm_poolroom"
+            class="scene-plate"
+            src="./assets/poolroom_sanctuary.jpg"
+            alt="Sunlit white and aqua tiled liminal poolroom atrium open to a pastel sky with pink clouds, Roman arches, and a motionless pink pool float"
+          />
+          <img
+            id="plate-twilight_staircase"
+            class="scene-plate"
+            src="./assets/sky_staircase.jpg"
+            alt="Floating pastel lavender checkerboard courtyard above peach twilight clouds with a white staircase ascending toward a glowing sun halo, floating bubbles, and porcelain wings"
+          />
+
+          <div class="viewport-bloom-rim" aria-hidden="true"></div>
+
+          <div class="viewport-osd-top" aria-hidden="true">
+            <span id="osd-stratum-code">STRATUM 01 // MEADOW THRESHOLD</span>
+            <span id="osd-tape-counter">SP · 00:42:19</span>
+          </div>
+
+          <!-- Dynamic Hotspot Portals Injected Here -->
+          <div id="hotspot-layer" role="group" aria-label="Memory Hotspot Portals"></div>
+
+          <!-- Canonical Spaced Italic Dreamcore Caption -->
+          <div class="dreamcore-caption-overlay">
+            <p id="scene-whisper-caption" class="dreamcore-caption-text">
+              you don't have to go inside yet. the grass still remembers your name.
+            </p>
+          </div>
+        </div>
+
+        <div class="viewport-statusbar">
+          <div class="memory-fragment-readout" id="memory-fragment-readout">
+            <strong>recovered trace:</strong>
+            <span>standing barefoot on cool marble squares while a distant lawnmower hums across an empty suburb.</span>
+          </div>
+          <div class="coords-readout" id="portal-coords-readout">
+            PORTAL: (41.0%, 48.0%)
+          </div>
+        </div>
+      </article>
+
+      <!-- Right Column: Stratum Switcher & Uncanny Reminder Dialog -->
+      <div class="side-column">
+        <!-- Window 2: memories.idx -->
+        <aside class="dream-window" id="win-index" data-draggable-window>
+          <div class="window-titlebar" data-drag-handle>
+            <div class="titlebar-label">
+              <span class="titlebar-glyph" aria-hidden="true"></span>
+              <span>memories.idx — where were you?</span>
+            </div>
+            <div class="titlebar-buttons">
+              <button type="button" class="win-ctrl-btn" data-win-action="reset-pos" title="re-center window">❖</button>
+            </div>
+          </div>
+
+          <div class="window-body">
+            <p class="strata-intro">
+              select a preserved afternoon (keys 1 · 2 · 3):
+            </p>
+
+            <div class="strata-list" role="tablist" aria-label="Dream Strata">
+              <button
+                type="button"
+                class="stratum-card is-active"
+                role="tab"
+                aria-selected="true"
+                data-stratum-btn="sunday_meadow"
+              >
+                <img class="stratum-thumb" src="./assets/meadow_portal.jpg" alt="Endless Sunday thumbnail" />
+                <span>
+                  <span class="stratum-meta-title">01 // the endless sunday</span>
+                  <span class="stratum-meta-sub">meadow doorway · cut grass · Fmaj9</span>
+                </span>
+              </button>
+
+              <button
+                type="button"
+                class="stratum-card"
+                role="tab"
+                aria-selected="false"
+                data-stratum-btn="warm_poolroom"
+              >
+                <img class="stratum-thumb" src="./assets/poolroom_sanctuary.jpg" alt="Warm Water Atrium thumbnail" />
+                <span>
+                  <span class="stratum-meta-title">02 // warm water atrium</span>
+                  <span class="stratum-meta-sub">chlorine echo · pink skylight · Dmaj9</span>
+                </span>
+              </button>
+
+              <button
+                type="button"
+                class="stratum-card"
+                role="tab"
+                aria-selected="false"
+                data-stratum-btn="twilight_staircase"
+              >
+                <img class="stratum-thumb" src="./assets/sky_staircase.jpg" alt="Above The Recess Bell thumbnail" />
+                <span>
+                  <span class="stratum-meta-title">03 // above the recess bell</span>
+                  <span class="stratum-meta-sub">cloud balcony · soap orbs · Bbmaj7#11</span>
+                </span>
+              </button>
+            </div>
+
+            <div class="liminal-telemetry-grid" aria-live="polite">
+              <div class="telemetry-cell">
+                <span>AIR SCENT</span>
+                <strong id="tel-scent">clover &amp; warm CRT glass</strong>
+              </div>
+              <div class="telemetry-cell">
+                <span>FAMILIARITY</span>
+                <strong id="tel-familiarity">99.4% (unverified)</strong>
+              </div>
+              <div class="telemetry-cell">
+                <span>PEOPLE NEARBY</span>
+                <strong id="tel-people">0 (just left a minute ago)</strong>
+              </div>
+              <div class="telemetry-cell">
+                <span>EXIT LOCATED</span>
+                <strong id="tel-exit">no — stop looking</strong>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Window 3: reminder.msg -->
+        <aside class="dream-window" id="win-reminder" data-draggable-window>
+          <div class="window-titlebar" data-drag-handle>
+            <div class="titlebar-label">
+              <span class="titlebar-glyph" aria-hidden="true"></span>
+              <span>reminder.msg — gentle notice</span>
+            </div>
+            <div class="titlebar-buttons">
+              <button type="button" class="win-ctrl-btn" data-win-action="whisper" title="another whisper">?</button>
+              <button type="button" class="win-ctrl-btn" data-win-action="reset-pos" title="re-center window">❖</button>
+            </div>
+          </div>
+
+          <div class="window-body">
+            <div class="dialog-prompt-layout">
+              <div class="dialog-key-orb" aria-hidden="true">🗝️</div>
+              <div>
+                <p id="dialog-question-text" class="dialog-question-text">
+                  haven't you stood in this exact light in a dream when you were seven years old?
+                </p>
+                <p id="dialog-response-echo" class="dialog-response-echo">
+                  &gt; awaiting quiet recognition...
+                </p>
+              </div>
+            </div>
+
+            <div class="dialog-actions">
+              <button type="button" class="bevel-btn" id="btn-dialog-remember">
+                i remember
+              </button>
+              <button type="button" class="bevel-btn" id="btn-dialog-stay">
+                stay a little longer
+              </button>
+              <button type="button" class="bevel-btn" id="btn-dialog-wake">
+                wake up?
+              </button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <footer class="liminal-footer-note">
+      don't rush toward the doorway — everyone promised they would wait for you by the fountain.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /**
+       * Strict DOM query helper — fails fast with diagnostic context if an expected element is missing.
+       * @param {string} id
+       * @returns {HTMLElement}
+       */
+      function mustGetById(id) {
+        const el = document.getElementById(id);
+        if (!el) {
+          throw new Error("[SomniumInvariantBreach] Missing required DOM element #" + id);
+        }
+        return el;
+      }
+
+      /**
+       * Canonical Dreamcore Strata definitions (visual plates, sky/grid palettes, harmonic voicings, measured portals).
+       */
+      const DREAM_STRATA = {
+        sunday_meadow: {
+          id: "sunday_meadow",
+          windowFile: "01_endless_sunday.bmp",
+          osdTitle: "STRATUM 01 // MEADOW THRESHOLD",
+          heroWhisper: "you've been here before, haven't you?",
+          defaultCaption: "you don't have to go inside yet. the grass still remembers your name.",
+          defaultTrace: "standing barefoot on cool marble squares while a distant lawnmower hums across an empty suburb.",
+          telemetry: {
+            scent: "clover & warm CRT glass",
+            familiarity: "99.4% (childhood)",
+            people: "0 (just left a minute ago)",
+            exit: "ajar — peach light inside"
+          },
+          cssVars: {
+            "--sky-top": "#358bf2",
+            "--sky-mid": "#8bcbff",
+            "--sky-horizon": "#fff3d6",
+            "--titlebar-start": "#639ef2",
+            "--titlebar-end": "#b9a7f7",
+            "--halo-glow": "rgba(255, 229, 190, 0.80)",
+            "--periphery-mist": "rgba(255, 248, 236, 0.62)"
+          },
+          canvasPalette: {
+            skyTop: [53, 139, 242],
+            skyMid: [139, 203, 255],
+            horizon: [255, 243, 214],
+            gridLine: [255, 255, 255],
+            orbTint: [255, 235, 208]
+          },
+          // Fmaj9 warm nostalgic voicing (F3, A3, C4, E4, G4)
+          chordHz: [174.61, 220.00, 261.63, 329.63, 392.00],
+          portals: [
+            {
+              label: "peach threshold",
+              x: 41.0,
+              y: 48.0,
+              chimeHz: 523.25,
+              caption: "behind the freestanding door is the kitchen from your first house, still sunlit at four o'clock.",
+              trace: "warm peach air hums through the doorframe; there are no walls attached to either side."
+            },
+            {
+              label: "west hill arch",
+              x: 19.2,
+              y: 51.5,
+              chimeHz: 659.25,
+              caption: "the marble arch frames nothing at all, yet walking through it makes the clouds feel closer.",
+              trace: "wind moves silently without bending a single blade of emerald grass."
+            },
+            {
+              label: "checkerboard path",
+              x: 58.5,
+              y: 73.0,
+              chimeHz: 587.33,
+              caption: "someone laid parlor tiles into the wildflowers so you wouldn't lose your way back.",
+              trace: "glossy black-and-ivory squares cool beneath summer sunlight, dissolving into poppies."
+            }
+          ]
+        },
+
+        warm_poolroom: {
+          id: "warm_poolroom",
+          windowFile: "02_warm_water_atrium.bmp",
+          osdTitle: "STRATUM 02 // WARM WATER ATRIUM",
+          heroWhisper: "don't wake up yet, the water is still warm.",
+          defaultCaption: "everyone went to get towels twenty years ago. they said to wait right here.",
+          defaultTrace: "sweet chlorine mist rises toward an open skylight where pink clouds drift without wind.",
+          telemetry: {
+            scent: "warm chlorine & rain",
+            familiarity: "98.9% (field trip)",
+            people: "0 (ripples just settled)",
+            exit: "beyond the seventh arch"
+          },
+          cssVars: {
+            "--sky-top": "#49b7c2",
+            "--sky-mid": "#a9e8e4",
+            "--sky-horizon": "#ffe9ef",
+            "--titlebar-start": "#4fb6c4",
+            "--titlebar-end": "#f0aecf",
+            "--halo-glow": "rgba(182, 246, 240, 0.82)",
+            "--periphery-mist": "rgba(239, 255, 252, 0.64)"
+          },
+          canvasPalette: {
+            skyTop: [73, 183, 194],
+            skyMid: [169, 232, 228],
+            horizon: [255, 233, 239],
+            gridLine: [232, 255, 252],
+            orbTint: [255, 214, 234]
+          },
+          // Dmaj9 crystalline atrium voicing (D3, F#3, A3, C#4, E4)
+          chordHz: [146.83, 185.00, 220.00, 277.18, 329.63],
+          portals: [
+            {
+              label: "pink pool ring",
+              x: 64.5,
+              y: 78.5,
+              chimeHz: 554.37,
+              caption: "the pink float hasn't moved an inch, even though you swear someone just climbed out.",
+              trace: "pastel vinyl warm from overhead sunbeams, resting above turquoise ceramic tiles."
+            },
+            {
+              label: "open cloud skylight",
+              x: 49.0,
+              y: 15.0,
+              chimeHz: 659.25,
+              caption: "there is no roof above the pool — only cotton-candy clouds watching quietly from thirty feet up.",
+              trace: "daylight pours straight into the tiled room without casting any harsh shadows."
+            },
+            {
+              label: "misty seventh arch",
+              x: 50.0,
+              y: 50.0,
+              chimeHz: 739.99,
+              caption: "the corridors repeat forever, and every single room is heated to the temperature of bathwater.",
+              trace: "soft golden caustics shimmer across endless seafoam-white columns."
+            }
+          ]
+        },
+
+        twilight_staircase: {
+          id: "twilight_staircase",
+          windowFile: "03_above_recess_bell.bmp",
+          osdTitle: "STRATUM 03 // CLOUD BALCONY",
+          heroWhisper: "it feels like a sunday afternoon that never ended.",
+          defaultCaption: "the recess bell rang miles below the clouds, and nobody had to go back inside.",
+          defaultTrace: "lavender marble reflects a sun that refuses to set, surrounded by weightless soap bubbles.",
+          telemetry: {
+            scent: "lilac soap & ozone",
+            familiarity: "100.0% (lucid)",
+            people: "0 (wings hovering)",
+            exit: "top step into the halo"
+          },
+          cssVars: {
+            "--sky-top": "#5d6eb8",
+            "--sky-mid": "#d4b2ea",
+            "--sky-horizon": "#ffd8bf",
+            "--titlebar-start": "#847be3",
+            "--titlebar-end": "#f5b2c8",
+            "--halo-glow": "rgba(255, 214, 188, 0.86)",
+            "--periphery-mist": "rgba(251, 240, 255, 0.64)"
+          },
+          canvasPalette: {
+            skyTop: [93, 110, 184],
+            skyMid: [212, 178, 234],
+            horizon: [255, 216, 191],
+            gridLine: [255, 240, 255],
+            orbTint: [238, 214, 255]
+          },
+          // Bbmaj7#11 floating twilight voicing (Bb2, F3, A3, D4, E4)
+          chordHz: [116.54, 174.61, 220.00, 293.66, 329.63],
+          portals: [
+            {
+              label: "sun-halo top step",
+              x: 49.5,
+              y: 43.0,
+              chimeHz: 587.33,
+              caption: "at the top of the balustrade there isn't a room — just warm golden static that feels like a blanket.",
+              trace: "twenty-four limestone steps curving gently into a motionless twilight sun."
+            },
+            {
+              label: "porcelain wings",
+              x: 13.5,
+              y: 56.0,
+              chimeHz: 659.25,
+              caption: "feathers carved from weightless milk-glass hover beside the railing, keeping you safe from falling.",
+              trace: "silent seraphim wings drift in slow unison with your breathing."
+            },
+            {
+              label: "iridescent orb",
+              x: 73.7,
+              y: 49.5,
+              chimeHz: 880.00,
+              caption: "inside every soap bubble is a tiny reflection of a summer afternoon you thought you forgot.",
+              trace: "rainbow-rimmed spheres suspended indefinitely without popping."
+            }
+          ]
+        }
+      };
+
+      const DRIFT_WHISPERS = [
+        "do you remember the carpet pattern in the hallway before you learned to read?",
+        "the television in the other room is still paused on a blue menu screen.",
+        "don't worry about the time — the streetlights won't turn on until you're ready.",
+        "you left your bicycle by the hedge, and it is still dry.",
+        "listen closely: you can hear wind chimes from a porch that no longer exists.",
+        "even the clouds look like they were rendered just for you this afternoon.",
+        "wasn't there an extra door at the end of your grandmother's upstairs landing?"
+      ];
+
+      const ECHO_PHRASES = [
+        "i remember the warm tiles...",
+        "4:15 pm forever",
+        "the door was already open",
+        "no footsteps behind me",
+        "soft static on channel 03",
+        "staying until the clouds turn pink",
+        "it felt safe here"
+      ];
+
+      // Required DOM references (fail-fast validated)
+      const skyCanvas = /** @type {HTMLCanvasElement} */ (mustGetById("dream-sky-canvas"));
+      const grainOverlay = mustGetById("film-grain-overlay");
+      const echoLayer = mustGetById("floating-echo-layer");
+      const stuckClockEl = mustGetById("stuck-clock");
+      const btnAudioToggle = mustGetById("btn-audio-toggle");
+      const audioBtnLabel = mustGetById("audio-btn-label");
+      const btnVhsToggle = mustGetById("btn-vhs-toggle");
+      const btnHalfAsleep = mustGetById("btn-half-asleep");
+      const btnDriftDeeper = mustGetById("btn-drift-deeper");
+      const watcherBtn = mustGetById("seraphic-watcher-btn");
+      const watcherIrisGroup = mustGetById("watcher-iris-group");
+      const heroWhisperTitle = mustGetById("hero-whisper-title");
+      const viewerWindowTitle = mustGetById("viewer-window-title");
+      const dreamViewport = mustGetById("dream-viewport");
+      const osdStratumCode = mustGetById("osd-stratum-code");
+      const osdTapeCounter = mustGetById("osd-tape-counter");
+      const hotspotLayer = mustGetById("hotspot-layer");
+      const sceneWhisperCaption = mustGetById("scene-whisper-caption");
+      const memoryFragmentReadout = mustGetById("memory-fragment-readout");
+      const portalCoordsReadout = mustGetById("portal-coords-readout");
+      const telScent = mustGetById("tel-scent");
+      const telFamiliarity = mustGetById("tel-familiarity");
+      const telPeople = mustGetById("tel-people");
+      const telExit = mustGetById("tel-exit");
+      const dialogQuestionText = mustGetById("dialog-question-text");
+      const dialogResponseEcho = mustGetById("dialog-response-echo");
+      const btnDialogRemember = mustGetById("btn-dialog-remember");
+      const btnDialogStay = mustGetById("btn-dialog-stay");
+      const btnDialogWake = mustGetById("btn-dialog-wake");
+      const winReminder = mustGetById("win-reminder");
+
+      // Verify image plate integrity explicitly (zero silent broken assets)
+      const plateElements = {
+        sunday_meadow: /** @type {HTMLImageElement} */ (mustGetById("plate-sunday_meadow")),
+        warm_poolroom: /** @type {HTMLImageElement} */ (mustGetById("plate-warm_poolroom")),
+        twilight_staircase: /** @type {HTMLImageElement} */ (mustGetById("plate-twilight_staircase"))
+      };
+
+      Object.keys(plateElements).forEach(function (key) {
+        const img = plateElements[key];
+        img.addEventListener("error", function () {
+          throw new Error("[SomniumAssetBreach] Failed to decode Dream Stratum visual plate: " + img.src);
+        });
+      });
+
+      /* ==========================================================================
+       * 1. Pre-Baked 128x128 Tileable 35mm Film Grain (One-time <0.4ms bake)
+       * ========================================================================== */
+      (function initPrebakedFilmGrain() {
+        const tile = document.createElement("canvas");
+        tile.width = 128;
+        tile.height = 128;
+        const gctx = tile.getContext("2d");
+        if (!gctx) {
+          throw new Error("[SomniumCanvasBreach] Could not acquire 2D context for film grain tile.");
+        }
+        const imgData = gctx.createImageData(128, 128);
+        const buf = imgData.data;
+        let seed = 19990814;
+        for (let i = 0; i < buf.length; i += 4) {
+          seed = (seed * 1664525 + 1013904223) >>> 0;
+          const v = (seed >>> 24) & 0xff;
+          buf[i] = v;
+          buf[i + 1] = Math.min(255, v + 6);
+          buf[i + 2] = Math.min(255, v + 14);
+          buf[i + 3] = 255;
+        }
+        gctx.putImageData(imgData, 0, 0);
+        grainOverlay.style.backgroundImage = "url(" + tile.toDataURL("image/png") + ")";
+      })();
+
+      /* ==========================================================================
+       * 2. Procedural Tape-Warbled Web Audio Dream Pad & Portal Chime Engine
+       * ========================================================================== */
+      const DreamAudioEngine = (function () {
+        /** @type {AudioContext | null} */
+        let ctx = null;
+        /** @type {GainNode | null} */
+        let masterGain = null;
+        /** @type {BiquadFilterNode | null} */
+        let lowpass = null;
+        /** @type {DelayNode | null} */
+        let echoDelay = null;
+        /** @type {Array<{oscA: OscillatorNode, oscB: OscillatorNode, gain: GainNode}>} */
+        let voices = [];
+        let isPlaying = false;
+
+        function ensureGraph(initialChordHz) {
+          if (ctx) {
+            return;
+          }
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtx) {
+            throw new Error("[SomniumAudioBreach] Web Audio API is not supported in this browser runtime.");
+          }
+          ctx = new AudioCtx();
+
+          masterGain = ctx.createGain();
+          masterGain.gain.setValueAtTime(0.0001, ctx.currentTime);
+
+          lowpass = ctx.createBiquadFilter();
+          lowpass.type = "lowpass";
+          lowpass.frequency.setValueAtTime(720, ctx.currentTime);
+          lowpass.Q.setValueAtTime(0.85, ctx.currentTime);
+
+          // Lush poolroom stereo feedback delay
+          echoDelay = ctx.createDelay(1.5);
+          echoDelay.delayTime.setValueAtTime(0.46, ctx.currentTime);
+          const feedbackGain = ctx.createGain();
+          feedbackGain.gain.setValueAtTime(0.38, ctx.currentTime);
+          const wetGain = ctx.createGain();
+          wetGain.gain.setValueAtTime(0.34, ctx.currentTime);
+
+          lowpass.connect(masterGain);
+          lowpass.connect(echoDelay);
+          echoDelay.connect(feedbackGain);
+          feedbackGain.connect(echoDelay);
+          echoDelay.connect(wetGain);
+          wetGain.connect(masterGain);
+          masterGain.connect(ctx.destination);
+
+          // Slow 0.18 Hz tape wow/flutter LFO modulating filter & pitch
+          const wowLfo = ctx.createOscillator();
+          wowLfo.type = "sine";
+          wowLfo.frequency.setValueAtTime(0.18, ctx.currentTime);
+
+          const filterModGain = ctx.createGain();
+          filterModGain.gain.setValueAtTime(145, ctx.currentTime);
+          wowLfo.connect(filterModGain);
+          filterModGain.connect(lowpass.frequency);
+
+          const pitchModGain = ctx.createGain();
+          pitchModGain.gain.setValueAtTime(3.2, ctx.currentTime); // subtle nostalgic tape cents drift
+          wowLfo.connect(pitchModGain);
+
+          voices = initialChordHz.map(function (hz) {
+            if (!ctx || !lowpass) {
+              throw new Error("[SomniumAudioBreach] Audio graph unexpectedly uninitialized.");
+            }
+            const oscA = ctx.createOscillator();
+            const oscB = ctx.createOscillator();
+            const vGain = ctx.createGain();
+
+            oscA.type = "sine";
+            oscB.type = "triangle";
+            oscA.frequency.setValueAtTime(hz, ctx.currentTime);
+            oscB.frequency.setValueAtTime(hz * 1.0035, ctx.currentTime);
+
+            pitchModGain.connect(oscA.detune);
+            pitchModGain.connect(oscB.detune);
+
+            vGain.gain.setValueAtTime(0.14 / initialChordHz.length, ctx.currentTime);
+            oscA.connect(vGain);
+            oscB.connect(vGain);
+            vGain.connect(lowpass);
+
+            oscA.start();
+            oscB.start();
+            return { oscA: oscA, oscB: oscB, gain: vGain };
+          });
+
+          wowLfo.start();
+        }
+
+        return {
+          toggle: function (chordHz) {
+            ensureGraph(chordHz);
+            if (!ctx || !masterGain) {
+              throw new Error("[SomniumAudioBreach] AudioContext unavailable after initialization.");
+            }
+            if (ctx.state === "suspended") {
+              ctx.resume();
+            }
+            const now = ctx.currentTime;
+            isPlaying = !isPlaying;
+            masterGain.gain.cancelScheduledValues(now);
+            masterGain.gain.setTargetAtTime(isPlaying ? 0.18 : 0.0001, now, 0.35);
+            return isPlaying;
+          },
+
+          setChord: function (chordHz) {
+            if (!ctx || voices.length === 0) {
+              return;
+            }
+            const now = ctx.currentTime;
+            voices.forEach(function (v, idx) {
+              const targetHz = chordHz[idx % chordHz.length];
+              v.oscA.frequency.setTargetAtTime(targetHz, now, 0.42);
+              v.oscB.frequency.setTargetAtTime(targetHz * 1.0035, now, 0.42);
+            });
+          },
+
+          playChime: function (hz) {
+            if (!isPlaying || !ctx || !lowpass) {
+              return;
+            }
+            const now = ctx.currentTime;
+            const bell = ctx.createOscillator();
+            const bellGain = ctx.createGain();
+            bell.type = "sine";
+            bell.frequency.setValueAtTime(Math.max(110, Math.min(2400, hz)), now);
+            bell.frequency.exponentialRampToValueAtTime(Math.max(110, hz * 1.006), now + 0.9);
+
+            bellGain.gain.setValueAtTime(0.0001, now);
+            bellGain.gain.linearRampToValueAtTime(0.11, now + 0.025);
+            bellGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.45);
+
+            bell.connect(bellGain);
+            bellGain.connect(lowpass);
+            bell.start(now);
+            bell.stop(now + 1.5);
+          },
+
+          isActive: function () {
+            return isPlaying;
+          }
+        };
+      })();
+
+      /* ==========================================================================
+       * 3. Active Stratum State, Hotspots & Floating Echo Spawner
+       * ========================================================================== */
+      let currentStratumId = "sunday_meadow";
+      let driftIndex = 0;
+
+      function spawnFloatingEcho(text, clientX, clientY) {
+        const note = document.createElement("div");
+        note.className = "floating-echo-note";
+        note.textContent = text;
+
+        const clampedX = Math.max(120, Math.min(window.innerWidth - 120, clientX));
+        const clampedY = Math.max(90, Math.min(window.innerHeight - 60, clientY));
+        note.style.left = clampedX + "px";
+        note.style.top = clampedY + "px";
+
+        echoLayer.appendChild(note);
+        window.setTimeout(function () {
+          if (note.parentNode) {
+            note.parentNode.removeChild(note);
+          }
+        }, 5400);
+      }
+
+      function updateDreamCaption(newCaption) {
+        sceneWhisperCaption.classList.add("is-updating");
+        window.setTimeout(function () {
+          sceneWhisperCaption.textContent = newCaption;
+          sceneWhisperCaption.classList.remove("is-updating");
+        }, 170);
+      }
+
+      function renderHotspots(stratum) {
+        hotspotLayer.innerHTML = "";
+        stratum.portals.forEach(function (portal, idx) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className =
+            "dream-hotspot" +
+            (idx === 0 ? " is-selected" : "") +
+            (portal.y >= 64 ? " tag-above" : "");
+          btn.style.left = portal.x + "%";
+          btn.style.top = portal.y + "%";
+          btn.setAttribute("aria-label", "Inspect dream portal: " + portal.label);
+
+          const tag = document.createElement("span");
+          tag.className = "hotspot-tag";
+          tag.textContent = portal.label;
+          btn.appendChild(tag);
+
+          btn.addEventListener("click", function (ev) {
+            const siblings = hotspotLayer.querySelectorAll(".dream-hotspot");
+            siblings.forEach(function (s) { s.classList.remove("is-selected"); });
+            btn.classList.add("is-selected");
+
+            updateDreamCaption(portal.caption);
+            memoryFragmentReadout.innerHTML =
+              "<strong>recovered trace [" + portal.label + "]:</strong> " +
+              "<span>" + portal.trace + "</span>";
+            portalCoordsReadout.textContent =
+              "PORTAL: (" + portal.x.toFixed(1) + "%, " + portal.y.toFixed(1) + "%)";
+
+            DreamAudioEngine.playChime(portal.chimeHz);
+            const rect = btn.getBoundingClientRect();
+            spawnFloatingEcho(portal.label, rect.left + rect.width / 2, rect.top);
+            ev.stopPropagation();
+          });
+
+          hotspotLayer.appendChild(btn);
+        });
+      }
+
+      // Smooth canvas palette interpolation targets
+      const currentCanvasPalette = {
+        skyTop: [53, 139, 242],
+        skyMid: [139, 203, 255],
+        horizon: [255, 243, 214],
+        gridLine: [255, 255, 255],
+        orbTint: [255, 235, 208]
+      };
+      let targetCanvasPalette = DREAM_STRATA.sunday_meadow.canvasPalette;
+
+      function applyStratum(stratumId) {
+        const stratum = DREAM_STRATA[stratumId];
+        if (!stratum) {
+          throw new Error("[SomniumStateBreach] Unknown Dream Stratum id: " + stratumId);
+        }
+        currentStratumId = stratumId;
+        targetCanvasPalette = stratum.canvasPalette;
+
+        // Apply CSS theme tokens
+        const rootStyle = document.documentElement.style;
+        Object.keys(stratum.cssVars).forEach(function (prop) {
+          rootStyle.setProperty(prop, stratum.cssVars[prop]);
+        });
+
+        // Crossfade visual plates
+        Object.keys(plateElements).forEach(function (key) {
+          plateElements[key].classList.toggle("is-active", key === stratumId);
+        });
+
+        // Update tab buttons
+        const tabButtons = document.querySelectorAll("[data-stratum-btn]");
+        tabButtons.forEach(function (btn) {
+          const active = btn.getAttribute("data-stratum-btn") === stratumId;
+          btn.classList.toggle("is-active", active);
+          btn.setAttribute("aria-selected", active ? "true" : "false");
+        });
+
+        // Update titles, whispers & telemetry
+        viewerWindowTitle.textContent = "liminal_viewer.exe — [" + stratum.windowFile + "]";
+        osdStratumCode.textContent = stratum.osdTitle;
+        heroWhisperTitle.textContent = stratum.heroWhisper;
+        updateDreamCaption(stratum.defaultCaption);
+
+        memoryFragmentReadout.innerHTML =
+          "<strong>recovered trace:</strong> <span>" + stratum.defaultTrace + "</span>";
+        const firstPortal = stratum.portals[0];
+        portalCoordsReadout.textContent =
+          "PORTAL: (" + firstPortal.x.toFixed(1) + "%, " + firstPortal.y.toFixed(1) + "%)";
+
+        telScent.textContent = stratum.telemetry.scent;
+        telFamiliarity.textContent = stratum.telemetry.familiarity;
+        telPeople.textContent = stratum.telemetry.people;
+        telExit.textContent = stratum.telemetry.exit;
+
+        renderHotspots(stratum);
+        DreamAudioEngine.setChord(stratum.chordHz);
+        DreamAudioEngine.playChime(firstPortal.chimeHz);
+      }
+
+      /* ==========================================================================
+       * 4. Controls, Seraphic Eye Tracking & Nostalgic Dialog Interactions
+       * ========================================================================== */
+      document.querySelectorAll("[data-stratum-btn]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          const targetId = btn.getAttribute("data-stratum-btn");
+          if (targetId) {
+            applyStratum(targetId);
+          }
+        });
+      });
+
+      window.addEventListener("keydown", function (ev) {
+        if (ev.key === "1") applyStratum("sunday_meadow");
+        if (ev.key === "2") applyStratum("warm_poolroom");
+        if (ev.key === "3") applyStratum("twilight_staircase");
+      });
+
+      btnAudioToggle.addEventListener("click", function () {
+        const stratum = DREAM_STRATA[currentStratumId];
+        const active = DreamAudioEngine.toggle(stratum.chordHz);
+        btnAudioToggle.setAttribute("aria-pressed", active ? "true" : "false");
+        document.body.classList.toggle("audio-playing", active);
+        audioBtnLabel.textContent = active ? "tape hum: on" : "tape hum: off";
+        if (active) {
+          DreamAudioEngine.playChime(stratum.portals[0].chimeHz);
+        }
+      });
+
+      btnVhsToggle.addEventListener("click", function () {
+        const active = document.body.classList.toggle("vhs-active");
+        btnVhsToggle.setAttribute("aria-pressed", active ? "true" : "false");
+        btnVhsToggle.innerHTML = "<span>" + (active ? "📼 vhs halation: on" : "📼 vhs halation: off") + "</span>";
+      });
+
+      function toggleHalfAsleep() {
+        const asleep = document.body.classList.toggle("half-asleep");
+        btnHalfAsleep.setAttribute("aria-pressed", asleep ? "true" : "false");
+        btnHalfAsleep.innerHTML = "<span>" + (asleep ? "☾ eyelids: half-closed" : "☾ half-asleep blur") + "</span>";
+      }
+
+      btnHalfAsleep.addEventListener("click", toggleHalfAsleep);
+
+      watcherBtn.addEventListener("click", function (ev) {
+        watcherBtn.classList.add("blinking");
+        window.setTimeout(function () {
+          watcherBtn.classList.remove("blinking");
+        }, 240);
+        toggleHalfAsleep();
+        DreamAudioEngine.playChime(783.99);
+        spawnFloatingEcho("the sky blinked back at you", ev.clientX || window.innerWidth / 2, (ev.clientY || 110) + 12);
+      });
+
+      function triggerDriftWhisper(originX, originY) {
+        const whisper = DRIFT_WHISPERS[driftIndex % DRIFT_WHISPERS.length];
+        driftIndex += 1;
+        dialogQuestionText.textContent = whisper;
+        updateDreamCaption(whisper);
+        dialogResponseEcho.textContent = "> memory stratum shifted softly...";
+        DreamAudioEngine.playChime(659.25);
+        spawnFloatingEcho(
+          ECHO_PHRASES[driftIndex % ECHO_PHRASES.length],
+          originX || window.innerWidth * 0.5,
+          originY || window.innerHeight * 0.35
+        );
+      }
+
+      btnDriftDeeper.addEventListener("click", function (ev) {
+        const rect = btnDriftDeeper.getBoundingClientRect();
+        triggerDriftWhisper(rect.left + rect.width / 2, rect.bottom + 18);
+      });
+
+      // Reminder modal buttons
+      let echoPhraseCursor = 0;
+      btnDialogRemember.addEventListener("click", function () {
+        const phrase = ECHO_PHRASES[echoPhraseCursor % ECHO_PHRASES.length];
+        echoPhraseCursor += 1;
+        dialogResponseEcho.textContent = "> trace logged: \"" + phrase + "\"";
+        const rect = btnDialogRemember.getBoundingClientRect();
+        spawnFloatingEcho(phrase, rect.left + rect.width / 2, rect.top);
+        DreamAudioEngine.playChime(587.33);
+      });
+
+      btnDialogStay.addEventListener("click", function () {
+        dialogResponseEcho.textContent = "> afternoon extended. nobody is calling you home yet.";
+        const rect = btnDialogStay.getBoundingClientRect();
+        spawnFloatingEcho("five more minutes of sunlight...", rect.left + rect.width / 2, rect.top);
+        DreamAudioEngine.playChime(523.25);
+      });
+
+      btnDialogWake.addEventListener("click", function () {
+        winReminder.classList.remove("gentle-shake");
+        void winReminder.offsetWidth;
+        winReminder.classList.add("gentle-shake");
+        dialogResponseEcho.textContent = "> wake_up.exe paused: listen to the quiet water first.";
+        const rect = btnDialogWake.getBoundingClientRect();
+        spawnFloatingEcho("not yet...", rect.left + rect.width / 2, rect.top);
+        DreamAudioEngine.playChime(440.00);
+      });
+
+      /* ==========================================================================
+       * 5. Bounded Viewport-Safe Window Dragging & Titlebar Actions
+       * ========================================================================== */
+      let topZIndex = 20;
+      document.querySelectorAll("[data-draggable-window]").forEach(function (winEl) {
+        const win = /** @type {HTMLElement} */ (winEl);
+        let offsetX = 0;
+        let offsetY = 0;
+        let startPointerX = 0;
+        let startPointerY = 0;
+        let dragging = false;
+
+        win.addEventListener("pointerdown", function () {
+          document.querySelectorAll(".dream-window").forEach(function (w) {
+            w.classList.remove("is-focused");
+          });
+          win.classList.add("is-focused");
+          topZIndex += 1;
+          win.style.zIndex = String(topZIndex);
+        });
+
+        const handle = win.querySelector("[data-drag-handle]");
+        if (handle) {
+          handle.addEventListener("pointerdown", function (ev) {
+            const e = /** @type {PointerEvent} */ (ev);
+            if ((/** @type {HTMLElement} */ (e.target)).closest("button")) {
+              return;
+            }
+            if (window.innerWidth <= 980) {
+              return;
+            }
+            dragging = true;
+            startPointerX = e.clientX - offsetX;
+            startPointerY = e.clientY - offsetY;
+            (/** @type {HTMLElement} */ (handle)).setPointerCapture(e.pointerId);
+          });
+
+          handle.addEventListener("pointermove", function (ev) {
+            if (!dragging) return;
+            const e = /** @type {PointerEvent} */ (ev);
+            const rawX = e.clientX - startPointerX;
+            const rawY = e.clientY - startPointerY;
+            // Clamp translation so the window never escapes the visible viewport
+            offsetX = Math.max(-220, Math.min(220, rawX));
+            offsetY = Math.max(-110, Math.min(180, rawY));
+            win.style.transform = "translate3d(" + offsetX + "px, " + offsetY + "px, 0)";
+          });
+
+          const stopDrag = function () {
+            dragging = false;
+          };
+          handle.addEventListener("pointerup", stopDrag);
+          handle.addEventListener("pointercancel", stopDrag);
+        }
+
+        win.querySelectorAll("[data-win-action]").forEach(function (ctrlBtn) {
+          ctrlBtn.addEventListener("click", function () {
+            const action = ctrlBtn.getAttribute("data-win-action");
+            if (action === "reset-pos") {
+              offsetX = 0;
+              offsetY = 0;
+              win.style.transform = "translate3d(0, 0, 0)";
+            } else if (action === "whisper") {
+              const rect = ctrlBtn.getBoundingClientRect();
+              triggerDriftWhisper(rect.left, rect.bottom + 14);
+            }
+          });
+        });
+      });
+
+      /* ==========================================================================
+       * 6. Stuck-in-1999 Looping Clock (04:15:00 PM -> 04:15:59 PM -> loops)
+       * ========================================================================== */
+      let dreamSeconds = 8;
+      let tapeTotalSeconds = 42 * 60 + 19;
+      window.setInterval(function () {
+        dreamSeconds = (dreamSeconds + 1) % 60;
+        const secStr = dreamSeconds < 10 ? "0" + dreamSeconds : String(dreamSeconds);
+        stuckClockEl.textContent = "04:15:" + secStr + " PM";
+
+        tapeTotalSeconds += 1;
+        const mins = Math.floor(tapeTotalSeconds / 60) % 60;
+        const secs = tapeTotalSeconds % 60;
+        osdTapeCounter.textContent =
+          "SP · 00:" + (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs);
+      }, 1000);
+
+      // Periodic autonomous gentle blink on the Seraphic Watcher
+      window.setInterval(function () {
+        if (document.body.classList.contains("half-asleep")) return;
+        watcherBtn.classList.add("blinking");
+        window.setTimeout(function () {
+          watcherBtn.classList.remove("blinking");
+        }, 190);
+      }, 6800);
+
+      /* ==========================================================================
+       * 7. 60fps Pre-Allocated Sky, Perspective Checkerboard & Iridescent Orbs Loop
+       * ========================================================================== */
+      const sctx = skyCanvas.getContext("2d");
+      if (!sctx) {
+        throw new Error("[SomniumCanvasBreach] Failed to initialize 2D context on #dream-sky-canvas.");
+      }
+
+      let vpWidth = window.innerWidth;
+      let vpHeight = window.innerHeight;
+
+      function resizeSkyCanvas() {
+        vpWidth = window.innerWidth;
+        vpHeight = window.innerHeight;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        skyCanvas.width = Math.floor(vpWidth * dpr);
+        skyCanvas.height = Math.floor(vpHeight * dpr);
+        sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resizeSkyCanvas();
+      window.addEventListener("resize", resizeSkyCanvas);
+
+      // Pointer tracking state (normalized [-1, 1])
+      let targetNormX = 0;
+      let targetNormY = 0;
+      let smoothNormX = 0;
+      let smoothNormY = 0;
+
+      window.addEventListener("pointermove", function (ev) {
+        targetNormX = (ev.clientX / Math.max(1, vpWidth)) * 2 - 1;
+        targetNormY = (ev.clientY / Math.max(1, vpHeight)) * 2 - 1;
+      });
+
+      // Pre-allocated pool of 38 floating iridescent dream orbs / cloud spores
+      const ORB_COUNT = 38;
+      const orbs = new Array(ORB_COUNT);
+      for (let i = 0; i < ORB_COUNT; i++) {
+        orbs[i] = {
+          x: Math.random(),
+          y: Math.random(),
+          r: 5 + Math.random() * 22,
+          speedY: 0.00012 + Math.random() * 0.00028,
+          phase: Math.random() * Math.PI * 2,
+          swayAmp: 10 + Math.random() * 24,
+          alpha: 0.16 + Math.random() * 0.34
+        };
+      }
+
+      function lerpChannel(curr, targ, factor) {
+        return curr + (targ - curr) * factor;
+      }
+
+      function lerpRgb(currArr, targArr, factor) {
+        currArr[0] = lerpChannel(currArr[0], targArr[0], factor);
+        currArr[1] = lerpChannel(currArr[1], targArr[1], factor);
+        currArr[2] = lerpChannel(currArr[2], targArr[2], factor);
+      }
+
+      function rgbString(arr, alpha) {
+        return (
+          "rgba(" +
+          Math.round(arr[0]) + "," +
+          Math.round(arr[1]) + "," +
+          Math.round(arr[2]) + "," +
+          alpha + ")"
+        );
+      }
+
+      let grainTick = 0;
+
+      function animateDreamscape(nowMs) {
+        const t = nowMs * 0.001;
+
+        // Critically damped pointer smoothing
+        smoothNormX += (targetNormX - smoothNormX) * 0.075;
+        smoothNormY += (targetNormY - smoothNormY) * 0.075;
+
+        // 1. Update Seraphic Watcher iris gaze & subtle scene plate parallax
+        const irisDx = (smoothNormX * 8.5).toFixed(2);
+        const irisDy = (smoothNormY * 4.2).toFixed(2);
+        watcherIrisGroup.setAttribute("transform", "translate(" + irisDx + ", " + irisDy + ")");
+
+        const activePlate = plateElements[currentStratumId];
+        if (activePlate) {
+          activePlate.style.transform =
+            "scale(1.022) translate3d(" + (-smoothNormX * 7).toFixed(2) + "px, " + (-smoothNormY * 5).toFixed(2) + "px, 0)";
+        }
+
+        // Subtle 8Hz stepped 35mm grain shift
+        grainTick += 1;
+        if (grainTick % 7 === 0) {
+          const gx = ((grainTick * 19) % 64) - 32;
+          const gy = ((grainTick * 31) % 64) - 32;
+          grainOverlay.style.transform = "translate3d(" + gx + "px, " + gy + "px, 0)";
+        }
+
+        // 2. Smoothly interpolate sky & horizon colors
+        lerpRgb(currentCanvasPalette.skyTop, targetCanvasPalette.skyTop, 0.045);
+        lerpRgb(currentCanvasPalette.skyMid, targetCanvasPalette.skyMid, 0.045);
+        lerpRgb(currentCanvasPalette.horizon, targetCanvasPalette.horizon, 0.045);
+        lerpRgb(currentCanvasPalette.gridLine, targetCanvasPalette.gridLine, 0.045);
+        lerpRgb(currentCanvasPalette.orbTint, targetCanvasPalette.orbTint, 0.045);
+
+        const skyGrad = sctx.createLinearGradient(0, 0, 0, vpHeight);
+        skyGrad.addColorStop(0, rgbString(currentCanvasPalette.skyTop, 1));
+        skyGrad.addColorStop(0.58, rgbString(currentCanvasPalette.skyMid, 1));
+        skyGrad.addColorStop(1, rgbString(currentCanvasPalette.horizon, 1));
+        sctx.fillStyle = skyGrad;
+        sctx.fillRect(0, 0, vpWidth, vpHeight);
+
+        // Soft glowing sun-halo bloom near horizon center
+        const sunX = vpWidth * (0.5 + smoothNormX * 0.03);
+        const sunY = vpHeight * (0.64 + smoothNormY * 0.02);
+        const sunGrad = sctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, vpWidth * 0.45);
+        sunGrad.addColorStop(0, "rgba(255, 252, 240, 0.55)");
+        sunGrad.addColorStop(0.45, rgbString(currentCanvasPalette.horizon, 0.28));
+        sunGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+        sctx.fillStyle = sunGrad;
+        sctx.fillRect(0, 0, vpWidth, vpHeight);
+
+        // 3. Liminal perspective horizon grid lines (subtle ethereal architectural floor)
+        const horizonY = vpHeight * 0.68;
+        const vanishX = vpWidth * (0.5 - smoothNormX * 0.04);
+        sctx.strokeStyle = rgbString(currentCanvasPalette.gridLine, 0.24);
+        sctx.lineWidth = 1;
+        sctx.beginPath();
+        for (let i = -9; i <= 9; i++) {
+          const bottomX = vanishX + i * (vpWidth * 0.13);
+          sctx.moveTo(vanishX, horizonY);
+          sctx.lineTo(bottomX, vpHeight);
+        }
+        const scrollOffset = (t * 0.22) % 1;
+        for (let row = 1; row <= 7; row++) {
+          const normRow = (row - 1 + scrollOffset) / 7;
+          const y = horizonY + Math.pow(normRow, 1.85) * (vpHeight - horizonY);
+          sctx.moveTo(0, y);
+          sctx.lineTo(vpWidth, y);
+        }
+        sctx.stroke();
+
+        // 4. Floating Iridescent Soap Bubbles / Dream Spores
+        for (let i = 0; i < ORB_COUNT; i++) {
+          const orb = orbs[i];
+          orb.y -= orb.speedY;
+          if (orb.y < -0.08) {
+            orb.y = 1.08;
+            orb.x = Math.random();
+          }
+          const px = orb.x * vpWidth + Math.sin(t * 0.7 + orb.phase) * orb.swayAmp - smoothNormX * 14;
+          const py = orb.y * vpHeight - smoothNormY * 10;
+
+          const orbGrad = sctx.createRadialGradient(
+            px - orb.r * 0.3,
+            py - orb.r * 0.3,
+            orb.r * 0.08,
+            px,
+            py,
+            orb.r
+          );
+          orbGrad.addColorStop(0, "rgba(255, 255, 255, " + (orb.alpha * 1.35).toFixed(3) + ")");
+          orbGrad.addColorStop(0.55, rgbString(currentCanvasPalette.orbTint, Number((orb.alpha * 0.45).toFixed(3))));
+          orbGrad.addColorStop(0.88, "rgba(195, 224, 255, " + (orb.alpha * 0.5).toFixed(3) + ")");
+          orbGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+          sctx.fillStyle = orbGrad;
+          sctx.beginPath();
+          sctx.arc(px, py, orb.r, 0, Math.PI * 2);
+          sctx.fill();
+        }
+
+        window.requestAnimationFrame(animateDreamscape);
+      }
+
+      // Boot initial Dream Stratum & start render loop
+      applyStratum("sunday_meadow");
+      window.requestAnimationFrame(animateDreamscape);
+    })();
+  </script>
+</body>
+</html>
